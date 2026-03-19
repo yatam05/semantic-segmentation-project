@@ -1,9 +1,10 @@
 import torch
+import yaml
 from datasets.data_loading import ADE20KDataset
-from models.model import build_deeplab
+from models.model import initialize_model
 from torch.utils.data import DataLoader
-from torchvision import transforms
 from torchmetrics.segmentation import MeanIoU
+from torchvision import transforms
 import torch.nn.functional as fct
 import matplotlib.pyplot as plt
 import numpy as np
@@ -37,26 +38,18 @@ def compare_prediction(image_tensor, pred_mask, gt_mask):
 
 norm_mean = [0.485,0.456,0.406]
 norm_std = [0.229,0.224,0.225]
-num_classes = 150
 
-transform = transforms.Compose([
-    transforms.Resize((256,256)),
-    transforms.ToTensor(),
-    transforms.Normalize(
-        mean=norm_mean,
-        std=norm_std
-    )
-])
-
-dataset = ADE20KDataset(
+validation_dataset = ADE20KDataset(
     image_dir="data/ADEChallengeData2016/images/validation",
     mask_dir="data/ADEChallengeData2016/annotations/validation",
-    transform=transform
 )
 
-loader = DataLoader(dataset, batch_size=1, shuffle=False)
+with open("checkpoints/config.yml") as f:
+    config = yaml.safe_load(f)
+num_classes = config["dataset"]["num_classes"]
 
-model = build_deeplab(num_classes)
+loader = DataLoader(validation_dataset, batch_size=1, shuffle=False, drop_last=False)
+model = initialize_model("Testing", num_classes, None)
 model.eval()
 
 miou_metric = MeanIoU(num_classes)
@@ -81,6 +74,6 @@ with torch.no_grad():
 
         print("Evaluating image " + str(i))
         compare_prediction(images[0], preds[0], masks_resized[0])
-
+        
 miou = miou_metric.compute()
 print("Mean IoU:", str(miou))
