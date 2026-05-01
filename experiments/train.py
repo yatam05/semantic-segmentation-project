@@ -19,7 +19,7 @@ parser.add_argument("--epochs", type=int)
 parser.add_argument("--batch_size", type=int)
 args = parser.parse_args()
 
-with open("checkpoints/config.yml") as f:
+with open("config.yml") as f:
     config = yaml.safe_load(f)
 
 num_classes = config["dataset"]["num_classes"]

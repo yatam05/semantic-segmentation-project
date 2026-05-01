@@ -6,6 +6,7 @@ __pycache__/
 
 data/
 logs/
+checkpoints/
 
 *.pth
 *.pt

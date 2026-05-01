@@ -47,7 +47,7 @@ parser.add_argument("--visualize_results", type=bool)
 args = parser.parse_args()
 visualize_results = args.visualize_results if args.visualize_results else False
 
-with open("checkpoints/config.yml") as f:
+with open("config.yml") as f:
     config = yaml.safe_load(f)
 num_classes = config["dataset"]["num_classes"]
 image_size = config["dataset"]["image_size"]
@@ -86,7 +86,7 @@ with torch.no_grad():
         ).squeeze(1).long()               
         
         miou_metric.update(preds, masks_resized)
-        print(f'Evaluating image ', i)
+
         if visualize_results:
           compare_prediction(images[0], preds[0], masks_resized[0])
         
