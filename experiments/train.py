@@ -73,7 +73,7 @@ transform = A.Compose([
 
     A.Normalize(),
     ToTensorV2()
-])
+], is_check_shapes=False)
 
 train_dataset = ADE20KDataset(
     image_dir="data/ADEChallengeData2016/images/training",

@@ -56,7 +56,7 @@ transform = A.Compose([
     A.Resize(image_size, image_size, interpolation=cv2.INTER_LINEAR, mask_interpolation=cv2.INTER_NEAREST),
     A.Normalize(),
     ToTensorV2()
-])
+], is_check_shapes=False)
 
 validation_dataset = ADE20KDataset(
     image_dir="data/ADEChallengeData2016/images/validation",
